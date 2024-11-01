@@ -9,27 +9,38 @@ function App() {
     selectedProjectId: undefined,
     projects: [],
   });
-  function handleSelectProject(id) {
-    setProjectsState((prevProjects) => {
+  function handelDeleteProject() {
+    setProjectsState((prevState) => {
       return {
-        ...prevProjects,
+        ...projectsState,
+        selectedProjectId: undefined,
+        projects: prevState.projects.filter(
+          (project) => project.id !== prevState.selectedProjectId
+        ),
+      };
+    });
+  }
+  function handleSelectProject(id) {
+    setProjectsState((prevState) => {
+      return {
+        ...prevState,
         selectedProjectId: id,
       };
     });
   }
 
   function handelStartProject() {
-    setProjectsState((prevProjects) => {
+    setProjectsState((prevState) => {
       return {
-        ...prevProjects,
+        ...prevState,
         selectedProjectId: null,
       };
     });
   }
   function handleCancelAddProject() {
-    setProjectsState((prevProjects) => {
+    setProjectsState((prevState) => {
       return {
-        ...prevProjects,
+        ...prevState,
         selectedProjectId: undefined,
       };
     });
@@ -49,12 +60,12 @@ function App() {
     });
   }
 
-  console.log(projectsState);
-
   const selectedProject = projectsState.projects.find(
     (project) => project.id === projectsState.selectedProjectId
   );
-  let content = <SelectedProject project={selectedProject} />;
+  let content = (
+    <SelectedProject project={selectedProject} onDelete={handelDeleteProject} />
+  );
 
   if (projectsState.selectedProjectId === null) {
     content = (
